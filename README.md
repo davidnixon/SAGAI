@@ -55,7 +55,7 @@ SAGAI runs in **Google Colab** with no local installation required.
 ### Prerequisites
 
 - A **Google account** (for Colab and Drive)
-- A **Google Maps API key** with Street View Static API enabled (for Block 2) [Setting up API keys](https://support.google.com/googleapi/answer/6158862?hl=en)
+- A **Google Maps API key** with Street View Static API enabled (for Block 2) [Set up the Street View Static API](https://developers.google.com/maps/documentation/streetview/get-api-key)
 - A **CARTO API key** for the Block 1 basemap, from [carto.com/basemaps/apikey](https://www.carto.com/basemaps/apikey/)
 Store the keys in Colab secrets (key icon in the left sidebar) with "Notebook access" turned on:
 
