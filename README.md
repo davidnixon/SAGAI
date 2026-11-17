@@ -36,7 +36,7 @@ SAGAI v2.x is organized as a single Colab notebook with **six sequential blocks*
 |-------|----------|-------------|
 | **Block 0** | Resume Case Study | Optional. |
 | **Block 1** | OSM Point Generator | Interactive map for defining a study area. Extracts streets from OSM and generates sample points along them. |
-| **Block 2** | Street View Downloader | Batch downloads Google Street View images at each point in up to 4 directions. Requires a Google Maps API key. |
+| **Block 2** | Street View Downloader | Batch downloads Google Street View images at each point in up to 4 directions. Requires a Google Maps API key, read from Colab secrets. |
 | **Block 3** | VLM Loader (UVLM) | Installs the [UVLM package](https://github.com/perezjoan/UVLM) (pinned to v4.0.0) and loads a selected model — family first, then checkpoint — with quantization and device placement. |
 | **Block 4** | Task Configuration | Defines analysis tasks (prompt, task type, format), generation parameters, and consensus settings via interactive widgets. |
 | **Block 5** | Run Analysis | Processes all images through the configured tasks using UVLM's batch engine. Outputs a CSV with one row per image. |
@@ -50,24 +50,34 @@ Blocks 1–2 handle geospatial data. Blocks 3–5 handle VLM inference via UVLM.
 
 SAGAI runs in **Google Colab** with no local installation required.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/perezjoan/SAGAI/blob/main/SAGAI.ipynb)
-
-1. **Open the notebook** in Google Colab (link above)
-2. **Select a GPU runtime**: `Runtime` → `Change runtime type` → `T4 GPU`
-3. **Block 1**: Draw a bounding box on the map to define your study area. Click "Generate points" to sample along streets.
-4. **Block 2**: Enter your Google Maps API key. Click "Download images" to fetch Street View imagery at each point.
-5. **Block 3**: Select a VLM model (e.g., Qwen2.5-VL 7B, 4-bit) and click "Load model".
-6. **Block 4**: Define your scoring tasks — write a prompt, choose a task type (numeric/category/boolean/text), set generation parameters. Click "Apply".
-7. **Block 5**: Run the analysis. Results are saved to Google Drive as one CSV per model checkpoint (`Score_Analysis_<checkpoint>.csv`).
-8. **Block 6**: Select a score column, an aggregation method, and a view filter. Generate interactive maps.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davidnixon/SAGAI/blob/main/SAGAI.ipynb)
 
 ### Prerequisites
 
 - A **Google account** (for Colab and Drive)
-- A **Google Maps API key** with Street View Static API enabled (for Block 2)
+- A **Google Maps API key** with Street View Static API enabled (for Block 2) [Setting up API keys](https://support.google.com/googleapi/answer/6158862?hl=en)
+- A **CARTO API key** for the Block 1 basemap, from [carto.com/basemaps/apikey](https://www.carto.com/basemaps/apikey/)
+Store the keys in Colab secrets (key icon in the left sidebar) with "Notebook access" turned on:
+
+| Secret name | Used by | Required |
+|---|---|---|
+| `CARTO_KEY` | Block 1 map basemap | Yes |
+| `GOOGLE_MAPS_API_KEY` | Block 2 Street View download | Yes, for Block 2 |
+| `HF_TOKEN` | (Optional) Block 3 model loading | Only for gated models |
+
 - A **Hugging Face token** stored in Colab secrets (for gated models like LLaMA3-based or Gemma checkpoints — optional for public models like Qwen and InternVL3.5)
 
 ---
+
+
+1. **Open the notebook** in Google Colab (link above)
+2. **Select a GPU runtime**: `Runtime` → `Change runtime type` → `T4 GPU`
+3. **Block 1**: Draw a bounding box on the map to define your study area. Click "Generate points" to sample along streets. The map needs a CARTO API key, read from Colab secrets.
+4. **Block 2**: Click "Download images" to fetch Street View imagery at each point.
+5. **Block 3**: Select a VLM model (e.g., Qwen2.5-VL 7B, 4-bit) and click "Load model".
+6. **Block 4**: Define your scoring tasks — write a prompt, choose a task type (numeric/category/boolean/text), set generation parameters. Click "Apply".
+7. **Block 5**: Run the analysis. Results are saved to Google Drive as one CSV per model checkpoint (`Score_Analysis_<checkpoint>.csv`).
+8. **Block 6**: Select a score column, an aggregation method, and a view filter. Generate interactive maps.
 
 ## 🧠 VLM Engine: UVLM
 
