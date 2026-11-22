@@ -34,6 +34,7 @@ SAGAI v2.x is organized as a single Colab notebook with **six sequential blocks*
 
 | Block | Function | Description |
 |-------|----------|-------------|
+| **Quick Run** | Resume + prompts + model + run | Optional shortcut at the top of the notebook combining Blocks 0, 3, 4 & 5: pick a project from Drive, edit its saved prompts, choose and load a model, and run. |
 | **Block 0** | Resume Case Study | Optional. |
 | **Block 1** | OSM Point Generator | Interactive map for defining a study area. Extracts streets from OSM and generates sample points along them. |
 | **Block 2** | Street View Downloader | Batch downloads Google Street View images at each point in up to 4 directions. Requires a Google Maps API key, read from Colab secrets. |
@@ -76,8 +77,24 @@ Store the keys in Colab secrets (key icon in the left sidebar) with "Notebook ac
 4. **Block 2**: Click "Download images" to fetch Street View imagery at each point.
 5. **Block 3**: Select a VLM model (e.g., Qwen2.5-VL 7B, 4-bit) and click "Load model".
 6. **Block 4**: Define your scoring tasks — write a prompt, choose a task type (numeric/category/boolean/text), set generation parameters. Click "Apply".
-7. **Block 5**: Run the analysis. Results are saved to Google Drive as one CSV per model checkpoint (`Score_Analysis_<checkpoint>.csv`).
+7. **Block 5**: Run the analysis. Results are saved to Google Drive as one CSV per model checkpoint (`Score_Analysis_<checkpoint>.csv`) in `SAGAI/Analysis/<case>/`.
 8. **Block 6**: Select a score column, an aggregation method, and a view filter. Generate interactive maps.
+
+**Coming back to an existing project?** Run the **Quick Run** cell at the top instead of Blocks 0, 3, 4 and 5. Pick the project, and its prompts, model choice and settings are reloaded from `SAGAI/Analysis/<case>/sagai_tasks.json`. Edit them and click **Run**. Then run Block 6.
+
+### Where results are saved
+
+```
+MyDrive/SAGAI/
+├── StreetSamples/<case>_osm.gpkg          sample points + streets
+├── StreetViewBatchDownload_<Case>/*.jpg   images only
+├── Analysis/<case>/                       saved prompts (sagai_tasks.json) + Score_Analysis_<model>.csv
+└── Spatial_Results/                       joined GeoPackage + HTML maps
+```
+
+CSVs from older versions (in the image folder or `Image_Analysis/`) are still found by Blocks 0 and 6. Quick Run offers a button to move them into `Analysis/<case>/`.
+
+> **Changing prompts:** results resume per image *and per column*: a column that already has a value is skipped. To re-score with a new prompt, give the task a new column name, or tick **Re-score changed columns** in Quick Run.
 
 ## 🧠 VLM Engine: UVLM
 
